@@ -3,6 +3,7 @@
     colour: r(), r(), r()
     font_size: sp(24)
     state: 'normal'
+    valid: False
     canvas.before:
         Color:
             rgba: (*self.colour[::-1], (1,.1)[self.disabled or self.state == 'down']) if self.colour else (0, 0, 0, 0)
@@ -14,7 +15,11 @@
         Rectangle:
             pos: self.pos
             size: self.size
-
+        Color:
+            rgba: 0,.5,.5,(1 if self.valid else 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
 <Attempt@BoxLayout>:
     spacing: sp(10)
@@ -44,8 +49,15 @@
 
 <CButton@ButtonBehavior+CLabel>:
     color: 0,0,0,1
-    #colour: .6,.7,.3
+    # colour: .6,.7,.3
+    present: False
     on_release: app.pressed(self)
+    canvas.before:
+        Color:
+            rgba: 0,.5,.7,(1 if self.present else 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
 <Keys@BoxLayout>:
     orientation: 'vertical'
@@ -130,5 +142,6 @@ Screen:
         Board:
             id: board
             size_hint_y: .7
-        Keys
+        Keys:
+            id: qwe
             size_hint_y: .3

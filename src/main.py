@@ -1,10 +1,12 @@
 from kivy.app import App
-from kivy.lang import Builder
-from kivy.properties import ListProperty
-
+from kivy.uix.label import Label
+from kivy.properties import ListProperty, StringProperty
+from random import choice
+import words
 
 class Lingo(App):
     guesses = ListProperty()
+    answer = StringProperty('')
 
     def pressed(self, button):
         for r_index, row in enumerate(self.root.ids.board.children[::-1]):
@@ -24,9 +26,34 @@ class Lingo(App):
                     return
 
     def check_row(self, row):
-        guess = ''.join([r.text for r in row.children[::-1]])
-        self.guesses.append(guess)
-        print(guess)
+        guess = ''
+        for r in row.children[::-1]:
+            guess += r.text
+            if r.text.upper() in self.answer:
+                r.valid = True
+        self.guesses.append(guess.upper())
+        self.mark_keys(guess)
+
+    def get_word(self, difficulty: str = 'easy'):
+        self.answer = choice(getattr(words, difficulty)).upper()
+        print(self.answer)
+
+    def on_start(self):
+        self.get_word()
+
+    def mark_keys(self, guess:str):
+        for char in guess:
+            for key in filter(lambda i: isinstance(i, Label), self.root.ids.qwe.walk()):
+                if key.text == char.lower():
+                    if char in self.answer:
+                        key.present = True
+                    else:
+                        key.disabled = True
+
+    def on_guesses(self, inst, values):
+        if values[-1] == self.answer:
+            print('Correct')
 
 
-Lingo().run()
+if __name__ == '__main__':
+    Lingo().run()
