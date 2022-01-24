@@ -1,18 +1,19 @@
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
 from kivy.properties import ListProperty, StringProperty, OptionProperty
 from kivy.animation import Animation
 from random import choice
 import words
 
 
-class Lingo(App):
+class GameScreen(Screen):
     guesses = ListProperty()
     answer = StringProperty('')
     difficulty = OptionProperty('easy', options=['easy', 'hard'])
 
     def pressed(self, button):
-        for r_index, row in enumerate(self.root.ids.board.children[::-1]):
+        for r_index, row in enumerate(self.ids.board.children[::-1]):
             for index, i in enumerate(row.children[::-1]):
                 if not i.text:
                     if button.text != '<-':
@@ -22,7 +23,7 @@ class Lingo(App):
                         row.children[::-1][index - 1].text = ''
                         return
                     else:
-                        self.root.ids.board.children[::-1][r_index-1].children[index].text = ''
+                        self.ids.board.children[::-1][r_index-1].children[index].text = ''
                         return
                     if index == 4:
                         if not self.check_row(row):
@@ -30,7 +31,7 @@ class Lingo(App):
                             anim.start(row)
                             return
                         if r_index != 4:
-                            self.root.ids.board.children[::-1][r_index+1].disabled = False
+                            self.ids.board.children[::-1][r_index+1].disabled = False
                         else:
                             print('failed')
                     return
@@ -51,12 +52,12 @@ class Lingo(App):
         self.answer = choice(getattr(words, self.difficulty)).upper()
         print(self.answer)
 
-    def on_start(self):
+    def on_pre_enter(self):
         self.get_word()
 
     def mark_keys(self, guess: str):
         for char in guess:
-            for key in filter(lambda i: isinstance(i, Label), self.root.ids.qwe.walk()):
+            for key in filter(lambda i: isinstance(i, Label), self.ids.qwe.walk()):
                 if key.text == char.lower():
                     if char in self.answer:
                         key.present = True
@@ -65,7 +66,12 @@ class Lingo(App):
 
     def on_guesses(self, inst, values):
         if values[-1] == self.answer:
+            self.ids.qwe.disabled = True
             print('Correct')
+
+
+class Lingo(App):
+    ...
 
 
 if __name__ == '__main__':

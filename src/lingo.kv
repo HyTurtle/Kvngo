@@ -51,7 +51,7 @@
     color: 0,0,0,1
     # colour: .6,.7,.3
     present: False
-    on_release: app.pressed(self)
+    on_release: app.root.current_screen.pressed(self)
     canvas.before:
         Color:
             rgba: 0,.5,.7,(1 if self.present else 0)
@@ -133,7 +133,8 @@
         Widget:
             width: cb.width * 1.5
 
-Screen:
+<GameScreen>:
+    name: 'game'
     BoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
@@ -145,3 +146,20 @@ Screen:
         Keys:
             id: qwe
             size_hint_y: .3
+
+<MenuButton@ButtonBehavior+Label>:
+    font_size: dp(32)
+    on_release:
+        app.root.current_screen.difficulty = self.text.lower()
+        app.root.current = 'game'
+
+ScreenManager:
+    Screen:
+        BoxLayout:
+            orientation: 'vertical'
+            MenuButton:
+                text: 'EASY'
+            MenuButton:
+                text: 'HARD'
+    GameScreen:
+        id: game_screen
