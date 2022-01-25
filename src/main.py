@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
 from kivy.properties import ListProperty, StringProperty, OptionProperty
 from kivy.animation import Animation
 from random import choice
@@ -52,9 +53,6 @@ class GameScreen(Screen):
         self.answer = choice(getattr(words, self.difficulty)).upper()
         print(self.answer)
 
-    def on_pre_enter(self):
-        self.get_word()
-
     def mark_keys(self, guess: str):
         for char in guess:
             for key in filter(lambda i: isinstance(i, Label), self.ids.qwe.walk()):
@@ -67,7 +65,26 @@ class GameScreen(Screen):
     def on_guesses(self, inst, values):
         if values[-1] == self.answer:
             self.ids.qwe.disabled = True
-            print('Correct')
+            Clock.schedule_once(lambda _: setattr(self.manager, 'current', 'menu'), 3)
+
+    def on_pre_enter(self):
+        self.get_word()
+
+    def on_leave(self):
+        for key in filter(lambda widget: isinstance(widget, Label), self.ids.qwe.walk()):
+            key.disabled = False
+            key.present = False
+            self.ids.qwe.disabled = False
+        for r_index, row in enumerate(self.ids.board.children[::-1]):
+            if r_index:
+                row.disabled = True
+            for index, i in enumerate(row.children[::-1]):
+                if i.text:
+                    i.valid = False
+                    i.text = ''
+                else:
+                    return
+
 
 
 class Lingo(App):
