@@ -133,7 +133,6 @@
             width: cb.width * 1.5
 
 <GameScreen>:
-    name: 'game'
     BoxLayout:
         orientation: 'vertical'
         spacing: dp(20)
@@ -149,7 +148,7 @@
 <MenuButton@ButtonBehavior+Label>:
     font_size: dp(32)
     on_release:
-        app.root.current_screen.difficulty = self.text.lower()
+        app.root.get_screen('game').difficulty = self.text.lower()
         app.root.current = 'game'
 
 ScreenManager:
@@ -162,4 +161,5 @@ ScreenManager:
             MenuButton:
                 text: 'HARD'
     GameScreen:
+        name: 'game'
         id: game_screen
