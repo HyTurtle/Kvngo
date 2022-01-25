@@ -86,10 +86,9 @@ class GameScreen(Screen):
                     return
 
 
-
-class Lingo(App):
+class Kvngo(App):
     ...
 
 
 if __name__ == '__main__':
-    Lingo().run()
+    Kvngo().run()
