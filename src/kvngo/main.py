@@ -5,7 +5,7 @@ from kivy.clock import Clock
 from kivy.properties import ListProperty, StringProperty, OptionProperty
 from kivy.animation import Animation
 from random import choice
-import words
+from . import words
 
 
 class GameScreen(Screen):
@@ -90,5 +90,9 @@ class Kvngo(App):
     ...
 
 
-if __name__ == '__main__':
+def run():
     Kvngo().run()
+
+
+if __name__ == '__main__':
+    run()

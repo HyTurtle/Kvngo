@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "Kvngo"
+version = "0.0.1"
+description = "Word Puzzle built in Kivy"
+authors = ["Turtle"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+Kivy = "^2.0.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+kvngo = "src.kvngo.main:run"
